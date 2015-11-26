@@ -211,8 +211,8 @@ public class RidgeAdNetwork extends Agent {
 			InitialCampaignMessage campaignMessage) {
 		System.out.println(campaignMessage.toString());
 
-		System.out.println("Haha I can input something!!");
-		System.out.println("Haha2 I can input something!!");
+//		System.out.println("Haha I can input something!!");
+//		System.out.println("Haha2 I can input something!!");
 		
 		day = 0;
 
