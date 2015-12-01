@@ -125,8 +125,11 @@ public class JohnAdNetwork extends Agent {
 		try {
 			Transportable content = message.getContent();
 
-			// log.fine(message.getContent().getClass().toString());
-
+//			log.fine(message.getContent().getClass().toString());
+//			log.info(message.getContent().getClass().toString());
+//			log.info(content.toString());
+//			log.info(message.toString());
+			
 			if (content instanceof InitialCampaignMessage) {
 				handleInitialCampaignMessage((InitialCampaignMessage) content);
 			} else if (content instanceof CampaignOpportunityMessage) {
@@ -154,6 +157,9 @@ public class JohnAdNetwork extends Agent {
 				System.out.println("UNKNOWN Message Received: " + content);
 			}
 
+			log.info(content.toString());
+//			log.fine(content.toString());
+			
 		} catch (NullPointerException e) {
 			this.log.log(Level.SEVERE,
 					"Exception thrown while trying to parse message." + e);
@@ -188,6 +194,8 @@ public class JohnAdNetwork extends Agent {
 		this.publisherCatalog = publisherCatalog;
 		generateAdxQuerySpace();
 		getPublishersNames();
+		log.info(publisherCatalog.toString());
+
 
 	}
 
@@ -200,6 +208,11 @@ public class JohnAdNetwork extends Agent {
 	 */
 	private void handleInitialCampaignMessage(
 			InitialCampaignMessage campaignMessage) {
+		
+		log.info("\n");
+		log.info("**********************************************************************");
+		log.info("****************--------------Day : 0--------------*******************");
+		log.info("**********************************************************************");
 		
 		System.out.println("\n\n******************************************************************************\n");
 		System.out.println("*****************               DAY : 0             **************************\n");
@@ -254,10 +267,26 @@ public class JohnAdNetwork extends Agent {
 		 * (upper bound) price for the auction.
 		 */
 
+
 		Random random = new Random();
 		long cmpimps = com.getReachImps();
-		long cmpBidMillis = random.nextInt((int)cmpimps);
+		
+		/** Ridge-get contract auction bid max and bid min **
+		 * 
+		 */
 
+		long cBmax = (long) (cmpimps*saveNotificationMessage.getQualityScore());
+		long cBmin = (long) (cmpimps*0.1/saveNotificationMessage.getQualityScore());
+		
+		log.info(String.valueOf(cBmax));
+		log.info(String.valueOf(cBmin));
+		
+		/** Ridge **
+		 * 
+		 */
+		
+//		long cmpBidMillis = random.nextInt((int)cmpimps);
+		long cmpBidMillis = cBmax;
 		System.out.println("Day " + day + ": Campaign total budget bid (millis): " + cmpBidMillis);
 
 		/*
@@ -267,7 +296,7 @@ public class JohnAdNetwork extends Agent {
 
 		if (adNetworkDailyNotification != null) {
 			double ucsLevel = adNetworkDailyNotification.getServiceLevel();
-			ucsBid = 0.1 + random.nextDouble()/10.0;			
+			ucsBid = 0.1 + random.nextDouble()/10.0;
 			System.out.println("Day " + day + ": ucs level reported: " + ucsLevel);
 		} else {
 			System.out.println("Day " + day + ": Initial ucs bid is " + ucsBid);
@@ -281,6 +310,8 @@ public class JohnAdNetwork extends Agent {
 
 	}
 
+	
+	AdNetworkDailyNotification saveNotificationMessage = new AdNetworkDailyNotification();
 	/**
 	 * On day n ( > 0), the result of the UserClassificationService and Campaign
 	 * auctions (for which the competing agents sent bids during day n -1) are
@@ -289,8 +320,15 @@ public class JohnAdNetwork extends Agent {
 	 */
 	private void handleAdNetworkDailyNotification(
 			AdNetworkDailyNotification notificationMessage) {
-
+		
+		saveNotificationMessage = notificationMessage;
 		if (adNetworkDailyNotification == null) {
+			
+			log.info("\n");
+			log.info("**********************************************************************");
+			log.info("****************--------------Day : 1--------------*******************");
+			log.info("**********************************************************************");
+
 			System.out.println("******************************************************************************\n");
 			System.out.println("*****************               DAY : 1             **************************\n");
 			System.out.println("******************************************************************************");
@@ -427,7 +465,9 @@ public class JohnAdNetwork extends Agent {
 			System.out.println("Day " + day + ": Sending BidBundle");
 			sendMessage(adxAgentAddress, bidBundle);
 		}
-		
+//		log.info("______________SEND BIDS AND ADS DAY "+day+"___________________");
+		log.info(bidBundle.toString());
+//		log.info(bidBundle.);
 
 	}
 
@@ -436,6 +476,11 @@ public class JohnAdNetwork extends Agent {
 	 */
 	private void handleCampaignReport(CampaignReport campaignReport) {
 
+		log.info("\n");
+		log.info("**********************************************************************");
+		log.info("****************--------------Day : "+day+"--------------*******************");
+		log.info("**********************************************************************");
+		
 		System.out.println("******************************************************************************\n");
 		System.out.println("*****************               DAY : "+day+"             **************************\n");
 		System.out.println("******************************************************************************\n\n");
